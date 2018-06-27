@@ -37,7 +37,16 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
-    'addpeople'
+    'addpeople',
+    'edara_askrya',
+    'shon_kanonya',
+    'takhtit',
+    'tanzim',
+    'afrad',
+    'edara_mahlya',
+    'shon_shakhsya',
+    'taabaa'
+
 ]
 
 MIDDLEWARE = [
