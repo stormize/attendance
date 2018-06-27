@@ -5,8 +5,12 @@ from django.http import HttpResponse,JsonResponse
 from datetime import date
 import datetime
 from django.core import serializers
+from django.contrib.auth.decorators import login_required
 def login(req):
     if req.method == 'POST':
+     if(people.objects.filter(date__date=date.today())) :
+       return render(req,'addpeople/killed.html')
+     else:
        form = AuthenticationForm(data=req.POST)
        if form.is_valid():
            return redirect('add')
@@ -14,7 +18,7 @@ def login(req):
     else:
         form =AuthenticationForm()
     return render(req,'addpeople/login.html',{'form':form})
-
+@login_required(login_url="login")
 def index(req):
     if req.method=='POST':
         mypeople= people.objects.all()
