@@ -1,9 +1,19 @@
 from .models import people
-from django.shortcuts import render
+from django.shortcuts import render,redirect
+from django.contrib.auth.forms import AuthenticationForm
 from django.http import HttpResponse,JsonResponse
 from datetime import date
 import datetime
 from django.core import serializers
+def login(req):
+    if req.method == 'POST':
+       form = AuthenticationForm(data=req.POST)
+       if form.is_valid():
+           return redirect('add')
+
+    else:
+        form =AuthenticationForm()
+    return render(req,'addpeople/login.html',{'form':form})
 
 def index(req):
     if req.method=='POST':
@@ -11,22 +21,23 @@ def index(req):
         for a in mypeople:
             attend = req.POST.get(str(a.mil_numb))
             if attend != None:
-             a.attendance=attend
-             a.date= datetime.datetime.now()
-             b= people()
-             b=a
+             b = people()
+             b = a
+             b.pk=None
+             b.attendance=attend
+             b.date=datetime.datetime.now()
              b.save()
         return render(req,'addpeople/dashboard.html')
 
     else:
-        takhtit=people.objects.filter(sector=1)
-        tanzem=people.objects.filter(sector =4)
-        edara=people.objects.filter(sector=2)
-        edara_mahlya=people.objects.filter(sector=6)
-        shon=people.objects.filter(sector=3)
-        taabaa=people.objects.filter(sector=8)
-        seglat=people.objects.filter(sector=7)
-        afrad=people.objects.filter(sector=5)
+        takhtit=people.objects.filter(sector=1).values('name','type','phone_number','sector','mil_numb').distinct()
+        tanzem=people.objects.filter(sector =4).values('name','type','phone_number','sector','mil_numb').distinct()
+        edara=people.objects.filter(sector=2).values('name','type','phone_number','sector','mil_numb').distinct()
+        edara_mahlya=people.objects.filter(sector=6).values('name','type','phone_number','sector','mil_numb').distinct()
+        shon=people.objects.filter(sector=3).values('name','type','phone_number','sector','mil_numb').distinct()
+        taabaa=people.objects.filter(sector=8).values('name','type','phone_number','sector','mil_numb').distinct()
+        seglat=people.objects.filter(sector=7).values('name','type','phone_number','sector','mil_numb').distinct()
+        afrad=people.objects.filter(sector=5).values('name','type','phone_number','sector','mil_numb').distinct()
         context={
         'takhtit':takhtit,
         'tanzem':tanzem,
@@ -40,47 +51,47 @@ def index(req):
         return render(req,'addpeople/add.html',context)
 def takhtit_line(req):
     #data for line chart type=0
-    data1 = people.objects.filter(date__date=date.today(),sector=1,attendance=1,type=0)
+    data1 = people.objects.filter(date__date=date.today(),attendance=1,type=0).values('name').distinct()
     yesterday=date.today()-datetime.timedelta(days=1)
-    data2 = people.objects.filter(date__date=yesterday,sector=1,attendance=1,type=0)
+    data2 = people.objects.filter(date__date=yesterday,attendance=1,type=0).values('name').distinct()
     yesterday=yesterday-datetime.timedelta(days=2)
-    data3=people.objects.filter(date__date=yesterday,sector=1,attendance=1,type=0)
+    data3=people.objects.filter(date__date=yesterday,attendance=1,type=0).values('name').distinct()
     yesterday=yesterday-datetime.timedelta(days=3)
-    data4=people.objects.filter(date__date=yesterday,sector=1,attendance=1,type=0)
+    data4=people.objects.filter(date__date=yesterday,attendance=1,type=0).values('name').distinct()
     yesterday=yesterday-datetime.timedelta(days=4)
-    data5=people.objects.filter(date__date=yesterday,sector=1,attendance=1,type=0)
+    data5=people.objects.filter(date__date=yesterday,attendance=1,type=0).values('name').distinct()
     yesterday=yesterday-datetime.timedelta(days=5)
-    data6=people.objects.filter(date__date=yesterday,sector=1,attendance=1,type=0)
+    data6=people.objects.filter(date__date=yesterday,attendance=1,type=0).values('name').distinct()
     yesterday=yesterday-datetime.timedelta(days=6)
-    data7=people.objects.filter(date__date=yesterday,sector=1,attendance=1,type=0)
+    data7=people.objects.filter(date__date=yesterday,attendance=1,type=0).values('name').distinct()
     #data for pie chart type=0
-    pie1=people.objects.filter(date__date=date.today(),sector=1,attendance=1,type=0).count()
-    pie2=people.objects.filter(date__date=date.today(),sector=1,attendance=2,type=0).count()
-    pie3=people.objects.filter(date__date=date.today(),sector=1,attendance=3,type=0).count()
-    pie4=people.objects.filter(date__date=date.today(),sector=1,attendance=4,type=0).count()
-    pie5=people.objects.filter(date__date=date.today(),sector=1,attendance=5,type=0).count()
-    pie6=people.objects.filter(date__date=date.today(),sector=1,attendance=6,type=0).count()
+    pie1=people.objects.filter(date__date=date.today(),attendance=1,type=0).values('name').distinct().count()
+    pie2=people.objects.filter(date__date=date.today(),attendance=2,type=0).values('name').distinct().count()
+    pie3=people.objects.filter(date__date=date.today(),attendance=3,type=0).values('name').distinct().count()
+    pie4=people.objects.filter(date__date=date.today(),attendance=4,type=0).values('name').distinct().count()
+    pie5=people.objects.filter(date__date=date.today(),attendance=5,type=0).values('name').distinct().count()
+    pie6=people.objects.filter(date__date=date.today(),attendance=6,type=0).values('name').distinct().count()
     #data for line chart type=1
-    mydata1 = people.objects.filter(date__date=date.today(),sector=1,attendance=1,type=1)
+    mydata1 = people.objects.filter(date__date=date.today(),attendance=1,type=1).values('name').distinct()
     yesterday=date.today()-datetime.timedelta(days=1)
-    mydata2 = people.objects.filter(date__date=yesterday,sector=1,attendance=1,type=1)
+    mydata2 = people.objects.filter(date__date=yesterday,attendance=1,type=1).values('name').distinct()
     yesterday=yesterday-datetime.timedelta(days=2)
-    mydata3=people.objects.filter(date__date=yesterday,sector=1,attendance=1,type=1)
+    mydata3=people.objects.filter(date__date=yesterday,attendance=1,type=1).values('name').distinct()
     yesterday=yesterday-datetime.timedelta(days=3)
-    mydata4=people.objects.filter(date__date=yesterday,sector=1,attendance=1,type=1)
+    mydata4=people.objects.filter(date__date=yesterday,attendance=1,type=1).values('name').distinct()
     yesterday=yesterday-datetime.timedelta(days=4)
-    mydata5=people.objects.filter(date__date=yesterday,sector=1,attendance=1,type=1)
+    mydata5=people.objects.filter(date__date=yesterday,attendance=1,type=1).values('name').distinct()
     yesterday=yesterday-datetime.timedelta(days=5)
-    mydata6=people.objects.filter(date__date=yesterday,sector=1,attendance=1,type=1)
+    mydata6=people.objects.filter(date__date=yesterday,attendance=1,type=1).values('name').distinct()
     yesterday=yesterday-datetime.timedelta(days=6)
-    mydata7=people.objects.filter(date__date=yesterday,sector=1,attendance=1,type=1)
+    mydata7=people.objects.filter(date__date=yesterday,attendance=1,type=1).values('name').distinct()
     #data for pie chart type=1
-    mypie1=people.objects.filter(date__date=date.today(),sector=1,attendance=1,type=1).count()
-    mypie2=people.objects.filter(date__date=date.today(),sector=1,attendance=2,type=1).count()
-    mypie3=people.objects.filter(date__date=date.today(),sector=1,attendance=3,type=1).count()
-    mypie4=people.objects.filter(date__date=date.today(),sector=1,attendance=4,type=1).count()
-    mypie5=people.objects.filter(date__date=date.today(),sector=1,attendance=5,type=1).count()
-    mypie6=people.objects.filter(date__date=date.today(),sector=1,attendance=6,type=1).count()
+    mypie1=people.objects.filter(date__date=date.today(),attendance=1,type=1).values('name').distinct().count()
+    mypie2=people.objects.filter(date__date=date.today(),attendance=2,type=1).values('name').distinct().count()
+    mypie3=people.objects.filter(date__date=date.today(),attendance=3,type=1).values('name').distinct().count()
+    mypie4=people.objects.filter(date__date=date.today(),attendance=4,type=1).values('name').distinct().count()
+    mypie5=people.objects.filter(date__date=date.today(),attendance=5,type=1).values('name').distinct().count()
+    mypie6=people.objects.filter(date__date=date.today(),attendance=6,type=1).values('name').distinct().count()
     #dic to render
     data= {
     "data1":data1.count(),

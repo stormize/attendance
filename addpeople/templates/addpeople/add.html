@@ -9,7 +9,7 @@
   <title>Document</title>
 </head>
 <body>
-  <form class='form-group' method="POST" action="/addpeople/">
+  <form class='form-group' method="POST" action="{%url 'add'%}">
     {% csrf_token %}
 <table class ='table table-dark table-hover'>
 <thead class="text-center">
